@@ -1,35 +1,36 @@
-import sentry_sdk
 import os
 
-from bottle import Bottle, request
-from sentry_sdk.integrations.bottle import BottleIntegration
-
-sentry_sdk.init(
-    dsn="https://bfc844c58c804666a4873c2dfe157ace@o1005073.ingest.sentry.io/5965960",
-    integrations=[BottleIntegration()]
-)
-
-app = Bottle()
+from bottle import route, template, redirect, static_file, error, run
 
 
-@app.route('/')
-def index():
-    raise RuntimeError("There is an error!")
-    return
+@route('/home')
+def show_home():
+    return template('home')
 
 
-@app.route('/success')
-def index():
-    return
+@route('/')
+def handle_root_url():
+    redirect('/home')
 
 
-@app.route('/fail')
-def index():
-    raise RuntimeError("There is an error!")
-    return
+@route('/profile')
+def make_request():
+    # make an API request here
+    profile_data = {'name': 'Marcel Hellkamp', 'role': 'Developer'}
+    return template('details', data=profile_data)
 
 
-if os.environ.get('APP_LOCATION') == 'heroku-20':
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+@route('/css/<filename>')
+def send_css(filename):
+    return static_file(filename, root='static/css')
+
+
+@error(404)
+def error404(error):
+    return template('error', error_msg='404 error. Nothing to see here')
+
+
+if os.environ.get('APP_LOCATION') == 'heroku':
+    run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 else:
-    app.run(host='localhost', port=8080, debug=True)
+    run(host='localhost', port=8080, debug=True)
