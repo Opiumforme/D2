@@ -1,33 +1,23 @@
 import os
 
-from bottle import route, template, redirect, static_file, error, run
-
-
-@route('/home')
-def show_home():
-    return template('home')
+from bottle import route, run
 
 
 @route('/')
-def handle_root_url():
-    redirect('/home')
+def index():
+    raise RuntimeError("There is an error!")
+    return
 
 
-@route('/profile')
-def make_request():
-    # make an API request here
-    profile_data = {'name': 'Marcel Hellkamp', 'role': 'Developer'}
-    return template('details', data=profile_data)
+@route('/success')
+def index():
+    return
 
 
-@route('/css/<filename>')
-def send_css(filename):
-    return static_file(filename, root='static/css')
-
-
-@error(404)
-def error404(error):
-    return template('error', error_msg='404 error. Nothing to see here')
+@route('/fail')
+def index():
+    raise RuntimeError("There is an error!")
+    return
 
 
 if os.environ.get('APP_LOCATION') == 'heroku':
