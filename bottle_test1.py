@@ -17,4 +17,18 @@ def index():
     return
 
 
-app.run(host='localhost', port=8080)
+@app.route('/success')
+def index():
+    return
+
+
+@app.route('/fail')
+def index():
+    raise RuntimeError("There is an error!")
+    return
+
+
+if os.environ.get('APP_LOCATION') == 'heroku':
+    run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+else:
+    run(host='localhost', port=8080, debug=True)

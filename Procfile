@@ -1,0 +1,1 @@
+web: python bottle_test1.py
