@@ -1,4 +1,5 @@
 import sentry_sdk
+import os
 
 from bottle import Bottle, request
 from sentry_sdk.integrations.bottle import BottleIntegration
@@ -29,6 +30,6 @@ def index():
 
 
 if os.environ.get('APP_LOCATION') == 'heroku-20':
-    run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 else:
-    run(host='localhost', port=8080, debug=True)
+    app.run(host='localhost', port=8080, debug=True)
